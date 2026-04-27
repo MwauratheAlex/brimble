@@ -1,0 +1,60 @@
+services:
+  buildkit:
+    image: moby/buildkit:latest
+    container_name: buildkit
+    privileged: true
+    networks:
+      - brimble
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: brimble-caddy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - brimble
+
+  backend:
+    build:
+      context: ./backend
+    container_name: brimble-backend
+    ports:
+      - "6492:6492"
+    environment:
+      PORT: 6492
+      BUILDKIT_HOST: docker-container://buildkit
+      DEPLOY_NETWORK: brimble
+      CADDY_CONTAINER_NAME: brimble-caddy
+      CADDYFILE_PATH: /shared/Caddyfile
+      DATABASE_PATH: /app/data/brimble.db
+      PUBLIC_BASE_URL: http://localhost:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./backend/data:/app/data
+      - ./backend/workspaces:/app/workspaces
+      - ./caddy/Caddyfile:/shared/Caddyfile
+    depends_on:
+      - buildkit
+      - caddy
+    networks:
+      - brimble
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: brimble-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_BACKEND_URL: http://localhost:6492
+    depends_on:
+      - backend
+    networks:
+      - brimble
+
+networks:
+  brimble:
+    name: brimble
+    driver: bridge

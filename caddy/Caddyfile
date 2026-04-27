@@ -1,0 +1,6 @@
+:80 {
+
+  handle_path /d/d1ec6a9e-c8ec-4077-a9bf-01047d336d65/* {
+    reverse_proxy brimble-d1ec6a9e-c8ec-4077-a9bf-01047d336d65:3000
+  }
+}
