@@ -430,30 +430,3 @@ When running outside Docker, you may need to start BuildKit manually:
 docker run --rm --privileged -d --name buildkit moby/buildkit
 export BUILDKIT_HOST=docker-container://buildkit
 ```
-
-## Current Limitations
-
-* Git deployments are intended for public repositories.
-* Upload deployments not fully implemented.
-* The system runs containers locally through the Docker socket.
-* Authentication and authorization are not implemented.
-* This is intended as a local deployment pipeline, not a production multi-tenant platform.
-
-## Review Flow
-
-A reviewer can test the project with:
-
-```bash
-docker compose up --build
-```
-
-Then:
-
-1. Open `http://localhost:5173`
-2. Create a deployment from a public Git URL
-3. Watch live logs stream in the UI
-4. Confirm the deployment becomes `running`
-5. Open the generated live URL through Caddy
-
-```
-```
