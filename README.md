@@ -66,8 +66,6 @@ You need:
 - Docker Compose
 - Internet access for cloning public repositories and downloading build dependencies
 
-No external accounts are required.
-
 The app can be tested with any public GitHub repository.
 
 ## Running the App
